@@ -64,13 +64,13 @@ namespace crossAndZero
                     for (int k = 0; k < mainFieldSize; k++)
                     {
                         if (field[i, k] == botp) kol++;
-                        if (field[i, k] != botp) weights[i, k] += weight;
+                        // if (field[i, k] != botp) weights[i, k] += weight; 
                     }
                     if (kol == mainFieldSize - 1)
                     {
                         for (int k = 0; k < mainFieldSize; k++)
                         {
-                            if (field[i, k] == -mainFieldSize) weights[i, k] += 10;
+                            if (field[i, k] == -mainFieldSize) weights[i, k] += 2;
                         }
                     }
                 }
@@ -91,7 +91,7 @@ namespace crossAndZero
                     for (int k = 0; k < mainFieldSize; k++)
                     {
                         if (field[k, j] == botp) kol++;
-                        if (field[k, j] != botp) weights[k, j] += weight;
+                        // if (field[k, j] != botp) weights[k, j] += weight; 
                     }
                     if (kol == mainFieldSize - 1)
                     {
@@ -116,7 +116,7 @@ namespace crossAndZero
                 for (int i = 0; i < mainFieldSize; i++)
                 {
                     if (field[i, i] == botp) kol++;
-                    if (field[i, i] != botp) weights[i, i] += weight;
+                    // if (field[i, i] != botp) weights[i, i] += weight; 
                 }
                 if (kol == mainFieldSize - 1)
                 {
@@ -140,7 +140,7 @@ namespace crossAndZero
                 for (int i = 0; i < mainFieldSize; i++)
                 {
                     if (field[i, mainFieldSize - 1 - i] == botp) kol++;
-                    if (field[i, mainFieldSize - 1 - i] != botp) weights[i, mainFieldSize - 1 - i] += weight;
+                    //if (field[i, mainFieldSize - 1 - i] != botp) weights[i, mainFieldSize - 1 - i] += weight; 
                 }
                 if (kol == mainFieldSize - 1)
                 {
@@ -169,7 +169,8 @@ namespace crossAndZero
                 for (int j = 0; j < mainFieldSize; j++)
                 {
                     if (field[i, j] == botp) bool1 = false;
-                    else if (field[i, j] == playerp) weight++;
+                    else if (field[i, j] == playerp)
+                        weight++;
                 }
                 if (bool1)
                 {
@@ -177,7 +178,7 @@ namespace crossAndZero
                     for (int k = 0; k < mainFieldSize; k++)
                     {
                         if (field[i, k] == playerp) kol++;
-                        if (field[i, k] != playerp) weightsZero[i, k] += weight;
+                        // if (field[i, k] != playerp) weightsZero[i, k] += weight; 
                     }
                     if (kol == mainFieldSize - 1)
                     {
@@ -206,7 +207,7 @@ namespace crossAndZero
                     for (int k = 0; k < mainFieldSize; k++)
                     {
                         if (field[k, j] == playerp) kol++;
-                        if (field[k, j] != playerp) weightsZero[k, j] += weight;
+                        //if (field[k, j] != playerp) weightsZero[k, j] += weight; 
                     }
                     if (kol == mainFieldSize - 1)
                     {
@@ -231,7 +232,7 @@ namespace crossAndZero
                 for (int i = 0; i < mainFieldSize; i++)
                 {
                     if (field[i, i] == playerp) kol++;
-                    if (field[i, i] != playerp) weightsZero[i, i] += weight;
+                    //if (field[i, i] != playerp) weightsZero[i, i] += weight; 
                 }
                 if (kol == mainFieldSize - 1)
                 {
@@ -255,7 +256,7 @@ namespace crossAndZero
                 for (int i = 0; i < mainFieldSize; i++)
                 {
                     if (field[i, mainFieldSize - 1 - i] == playerp) kol++;
-                    if (field[i, mainFieldSize - 1 - i] != playerp) weightsZero[i, mainFieldSize - 1 - i] += weight;
+                    //if (field[i, mainFieldSize - 1 - i] != playerp) weightsZero[i, mainFieldSize - 1 - i] += weight; 
                 }
                 if (kol == mainFieldSize - 1)
                 {
@@ -352,9 +353,9 @@ namespace crossAndZero
             }
             //суммируем обе матрицы и ищем все координаты максимувов 
             for (int i = 0; i < mainFieldSize; i++)
-                for (int j = 0; j < mainFieldSize; j++)
-                    weights[i, j] +=
-                    weightsZero[i, j];
+                for (int j = 0; j < mainFieldSize;
+                j++)
+                    weights[i, j] += weightsZero[i, j];
             return weights;
         }
 
@@ -393,7 +394,14 @@ namespace crossAndZero
             if (field[x, y] == -mainFieldSize)
             {
                 field[x, y] = playerp;
+
                 setWeights1(field);
+                int[,] firstWeights = new int[20, 20];
+
+                /*for (int i = 0; i < mainFieldSize; i++) 
+                for (int j = 0; j < mainFieldSize; j++) 
+                firstWeights[i, j] = weights[i, j];*/
+                showWeightsMatr();
                 //если несколько одинаковых весов в разных клетках, то надо выбрать самый оптимальный ход 
                 //поэтому бот ставит в каждую из этих точек крестик, и смотрит где сумма весов, рассчитанных по тому же алгоритму больше 
                 int[,] dopMas = new int[mainFieldSize, mainFieldSize];
@@ -413,10 +421,23 @@ namespace crossAndZero
                         }
                     }
                 }
-
+                /*Console.WriteLine("firstweights: "); 
+                for (int i = 0; i < 3; i++) 
+                { 
+                for (int j = 0; j < 3; j++) 
+                Console.Write(firstWeights[i, j] + " "); 
+                Console.WriteLine(); 
+                }*/
+                Console.WriteLine("dopMas: ");
+                for (int i = 0; i < 3; i++)
+                {
+                    for (int j = 0; j < 3; j++)
+                        Console.Write(dopMas[i, j] + " ");
+                    Console.WriteLine();
+                }
                 int maxi = 0, maxj = 0;
                 bool bool1 = false;
-                setWeights1(field);
+                setWeights1(field); 
                 for (int i = 0; i < mainFieldSize; i++)
                 {
                     for (int j = 0; j < mainFieldSize; j++)
@@ -448,9 +469,10 @@ namespace crossAndZero
                         }
                     }
                 }
-
+                showWeightsMatr();
                 if (field[maxi, maxj] == -mainFieldSize)
-                    field[maxi, maxj] = botp;
+                    field[maxi,
+                    maxj] = botp;
                 return true;
             }
             else return false;
@@ -469,8 +491,7 @@ namespace crossAndZero
             for (int j = 0; j < mainFieldSize; j++)
             {
                 sum = 0;
-                for (int i = 0; i
-                < mainFieldSize; i++)
+                for (int i = 0; i < mainFieldSize; i++)
                     sum += field[i, j];
                 if (sum == 0 | sum == mainFieldSize) bool1 = true;
             }
